@@ -5,7 +5,8 @@ from blog.models import Post
 user_model = get_user_model()
 from django import template
 register = template.Library()
-
+import logging
+logger = logging.getLogger(__name__)
 '''
 <small>By {% author_details_tag %} on {{ post.published_at|date:"M, d Y" }}</small> poste parligne htm
 @register.simple_tag(takes_context=True)
@@ -75,4 +76,5 @@ def endcol():
 @register.inclusion_tag("blog/post-list.html")
 def recent_posts(post):
     posts = Post.objects.exclude(pk=post.pk)[:5]
+    logger.debug("Loaded %d recent posts for post %d", len(posts), post.pk)
     return {"title": "Recent Posts", "posts": posts}
